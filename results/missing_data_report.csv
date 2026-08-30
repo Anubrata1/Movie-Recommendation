@@ -1,0 +1,11 @@
+Feature,Missing Count,Missing Percentage,Chosen Treatment
+genres,662523,44.686534003416966,empty string + missing indicator
+keywords,1121634,75.65312582414285,empty string + missing indicator
+overview,344299,23.222633736251357,empty string + missing indicator
+tagline,1275053,86.00108862735154,empty string + missing indicator
+original_language,0,0.0,'unknown' + missing indicator
+runtime,0,0.0,median + missing indicator
+popularity,0,0.0,median + missing indicator
+vote_average,0,0.0,median + missing indicator
+vote_count,0,0.0,median + missing indicator
+release_year,346135,23.346470156164738,median + missing indicator

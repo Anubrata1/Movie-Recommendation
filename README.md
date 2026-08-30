@@ -1,83 +1,97 @@
-# 🎬 Movie Recommender System
-This project is a Movie Recommender System built using Python and machine learning techniques. It provides personalized movie recommendations based on user preferences using content-based filtering.
+# Unsupervised Movie Recommendation with Nearest Neighbors
 
-📌 Features
-Recommend movies based on content similarity.
+This project is a content-based movie recommendation system built with `sklearn.neighbors.NearestNeighbors`. Given a movie title, it returns the most similar movies using metadata—not a predicted rating or artificial target variable.
 
-Uses cosine similarity to measure closeness between movies.
+## What the model uses
 
-Simple and interactive interface using Jupyter Notebook.
+- Text: genres, keywords, overview, and tagline using separately weighted TF-IDF blocks
+- Categorical: original language
+- Numeric: runtime, popularity, vote average, vote count, and release year
+- Missing-value indicators for optional features
+- TruncatedSVD for the selected compact representation
+- Cosine distance with brute-force nearest-neighbor search
 
-Based on metadata like genres, keywords, overview, cast, and crew.
+Identifiers, titles, URLs, and image paths are not similarity features. Titles and IDs are used only for lookup and duplicate control.
 
-🧠 Technologies Used
-Python 🐍
+## Data retention
 
-Pandas
+| Stage | Rows | Retained |
+|---|---:|---:|
+| Original dataset | 1,482,601 | 100.00% |
+| Required identifier/title check | 1,482,578 | 100.00% |
+| Duplicate removal | 1,458,577 | 98.38% |
+| Final recommendation matrix | 1,458,577 | 98.38% |
 
-Numpy
+Optional missing fields are imputed feature-by-feature rather than removing entire rows. Same-title movies from different known release years are retained as possible remakes.
 
-Scikit-learn
+## Final configuration
 
-NLTK (for optional NLP tasks)
+- Algorithm: unsupervised `NearestNeighbors`
+- Features: all useful metadata groups
+- Weights: genres 3.0, keywords 3.0, overview 1.5, tagline 0.5, numeric 0.25, language 0.5
+- Representation: TF-IDF followed by 100-component TruncatedSVD
+- Distance metric: cosine
+- Recommendations: K=10
+- Final catalog coverage: 1,458,577 movies
 
-Jupyter Notebook
+The notebook compares multiple K values, cosine/Euclidean/Manhattan distances, 12 feature ablations, four weighting configurations, and direct TF-IDF against six SVD sizes.
 
-📂 Dataset
-The project uses the TMDb 5000 Movie Dataset from Kaggle which includes:
+## Evaluation
 
-tmdb_5000_movies.csv
+Because there are no user labels or interaction histories, the project does not claim classification accuracy, R², RMSE, or F1. It reports intrinsic recommendation metrics:
 
-tmdb_5000_credits.csv
+- Average neighbor similarity
+- Genre and keyword overlap at K
+- Diversity at K
+- Catalog coverage over evaluation queries
+- Recommendation coverage
+- Neighbor-distance statistics
 
-Make sure these datasets are available in the working directory.
+These metrics describe relationships in the engineered feature space. They do not prove that an individual user will like a recommendation.
 
-⚙️ How It Works
-Data is loaded and merged from the two CSV files.
+## Run the notebook
 
-Important features like genres, cast, crew, keywords, overview are extracted and processed.
+The full dataset and generated model are intentionally excluded from Git because they exceed GitHub's file-size limit. Before running the notebook, place the source dataset at `data/movies.csv`. Running all cells recreates `models/final_nearest_neighbors.joblib` and the result reports.
 
-Text data is cleaned and combined into a "tag" feature.
+```powershell
+cd C:\Users\anubr\PROJECT1_ML\Movie-Recommendation
+.\.venv\Scripts\Activate.ps1
+jupyter lab movie_knn_recommender.ipynb
+```
 
-Vectorization is done using CountVectorizer.
+Select `Python (Movie Recommendation)`, restart the kernel, and run all cells. A complete run rebuilds the reports and the approximately 1 GB final index.
 
-Cosine similarity is computed between movies.
+Use the final function in the notebook:
 
-Based on the user input, the most similar movies are recommended.
+```python
+recommend_movies("Interstellar", k=10)
+```
 
-🚀 Getting Started
-Clone the repository or download the notebook.
+It returns rank, title, cosine similarity, genres, and release year while excluding the query movie and obvious duplicates.
 
-Place the dataset files in the same directory.
+## Project structure
 
-Open movie recommender system.ipynb in Jupyter Notebook or any IDE.
+```text
+Movie-Recommendation/
+|-- movie_knn_recommender.ipynb
+|-- README.md
+|-- requirements.txt
+|-- .gitignore
+|-- .python-version
+|-- data/
+|   `-- movies.csv
+|-- models/
+|   `-- final_nearest_neighbors.joblib
+`-- results/
+    |-- data_retention_report.csv
+    |-- missing_data_report.csv
+    |-- nearest_neighbor_experiments.csv
+    |-- k_experiments.csv
+    |-- distance_metric_experiments.csv
+    |-- feature_weight_experiments.csv
+    `-- svd_experiments.csv
+```
 
-Run the cells sequentially.
+## Extension path
 
-Use recommend('Movie Title') to get suggestions.
-
-python
-Copy
-Edit
-recommend('Avatar')
-📈 Example Output
-For the movie "The Dark Knight", the system might recommend:
-
-The Dark Knight Rises
-
-Batman Begins
-
-Man of Steel
-
-... etc.
-
-📌 Future Improvements
-Add collaborative filtering or hybrid model
-
-Integrate with a web interface using Flask or Streamlit
-
-Include movie posters and metadata in recommendations
-
-🧑‍💻 Author
-Your Name –anubratag1@gmail.com
-LinkedIn:Anubrata_ghosh
+If ratings, clicks, watch history, likes, or completion data become available, this content-based system can be extended into a collaborative or hybrid recommender. Until then, it remains an unsupervised movie-to-movie similarity system.

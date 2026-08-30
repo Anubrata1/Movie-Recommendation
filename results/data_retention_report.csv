@@ -1,0 +1,7 @@
+Stage,Rows Remaining,Rows Removed,Percentage Retained
+Original Dataset,1482601,0,100.0
+After Required Identifier/Title Check,1482578,23,99.99844867229956
+After Duplicate Removal,1458577,24024,98.37960449237522
+After Feature-wise Missing-value Treatment,1458577,24024,98.37960449237522
+Final Recommendation Catalog,1458577,24024,98.37960449237522
+Final Recommendation Matrix,1458577,24024,98.37960449237522

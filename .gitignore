@@ -1,0 +1,34 @@
+# Python environments
+.venv/
+venv/
+env/
+
+# Python-generated files
+__pycache__/
+*.py[cod]
+*.pyd
+
+# Jupyter-generated files
+.ipynb_checkpoints/
+
+# Tool caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Large local data and generated model artifacts
+# These exceed GitHub's regular file limit and can be rebuilt by the notebook.
+/TMDB_movie_dataset_v11.csv
+/data/*.csv
+/models/*.joblib
